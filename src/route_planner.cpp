@@ -21,7 +21,7 @@ RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, floa
 // - You can use the distance to the end_node for the h value.
 // - Node objects have a distance method to determine the distance to another node.
 
-float RoutePlanner::CalculateHValue(const RouteModel::Node *node) {
+float RoutePlanner::CalculateHValue(RouteModel::Node const *node) {
 
     return node->distance(*this->end_node);
 }
@@ -36,7 +36,15 @@ float RoutePlanner::CalculateHValue(const RouteModel::Node *node) {
 
 void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 
+    current_node->FindNeighbors();
 
+    for (auto neighbour : current_node->neighbors) {
+            neighbour->parent = current_node;
+            neighbour->g_value = current_node->g_value + current_node->distance(*neighbour);
+            neighbour->h_value = CalculateHValue(neighbour);
+            open_list.emplace_back(neighbour);
+            neighbour->visited = true;
+        }
 
 }
 
@@ -48,8 +56,22 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 // - Remove that node from the open_list.
 // - Return the pointer.
 
-RouteModel::Node *RoutePlanner::NextNode() {
+ool CompareNodes(RouteModel::Node *node_1, RouteModel::Node *node_2)
+{
+    float f1 = node_1->g_value + node_1->h_value;
+    float f2 = node_2->g_value + node_2->h_value;
+    return f1 > f2;
+}
 
+RouteModel::Node *RoutePlanner::NextNode() {
+    // Sort the open list descendingly by g + h;
+    std::sort(open_list.begin(), open_list.end(), CompareNodes);
+    // Create a pointer to the node with the lowest sum;
+    RouteModel::Node *lowest_sum = open_list.back();
+    // Remove the above node from the open list;
+    open_list.pop_back();
+
+    return lowest_sum;
 }
 
 
