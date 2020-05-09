@@ -12,10 +12,14 @@ using namespace std::experimental;
 
 void GetUserData(float& start_x,float& start_y,float& end_x,float& end_y)
 {
-    std::cout<<"Enter the START co-ordinates x <space> y :\t";
-    std::cin>>start_x>>start_y;
-    std::cout<<"Enter the END co-ordinates x <space> y :\t";
-    std::cin>>end_x>>end_y;
+    std::cout<<"Enter the START x co-ordinate :\t";
+    std::cin>>start_x;
+    std::cout<<"Enter the START y co-ordinate :\t";
+    std::cin>>start_y;
+    std::cout<<"Enter the END xX co-ordinate :\t";
+    std::cin>>end_x;
+    std::cout<<"Enter the END y co-ordinate :\t";
+    std::cin>>end_y;
 }
 
 static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
@@ -70,8 +74,8 @@ int main(int argc, const char **argv)
     RouteModel model{osm_data};
 
     // Create RoutePlanner object and perform A* search.
-    // RoutePlanner route_planner{model, start_x, start_y, end_x, end_y};
-    RoutePlanner route_planner{model, 10, 10, 90, 90};
+    RoutePlanner route_planner{model, start_x, start_y, end_x, end_y};
+    // RoutePlanner route_planner{model, 10, 10, 90, 90};
     route_planner.AStarSearch();
 
     std::cout << "Distance: " << route_planner.GetDistance() << " meters. \n";
