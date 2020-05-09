@@ -3,12 +3,20 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <io2d.h>
+#include     <io2d.h>
 #include "route_model.h"
 #include "render.h"
 #include "route_planner.h"
 
 using namespace std::experimental;
+
+void GetUserData(float& start_x,float& start_y,float& end_x,float& end_y)
+{
+    std::cout<<"Enter the START co-ordinates x <space> y :\t";
+    std::cin>>start_x>>start_y;
+    std::cout<<"Enter the END co-ordinates x <space> y :\t";
+    std::cin>>end_x>>end_y;
+}
 
 static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
 {   
@@ -56,11 +64,8 @@ int main(int argc, const char **argv)
     // user input for these values using std::cin. Pass the user input to the
     // RoutePlanner object below in place of 10, 10, 90, 90.
     float start_x,start_y,end_x,end_y;
-    std::cout<<"Enter the START co-ordinates :\t";
-    std::cin>>start_x>>start_y;
-    std::cout<<"Enter the END co-ordinates :\t";
-    std::cin>>end_x>>end_y;
-
+    GetUserData(start_x,start_y,end_x,end_y);
+    
     // Build Model.
     RouteModel model{osm_data};
 
